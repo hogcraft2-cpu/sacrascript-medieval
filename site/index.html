@@ -17,17 +17,65 @@
 <footer>Ad maiorem Dei gloriam · <a href="https://github.com/hogcraft2-cpu/sacrascript-medieval">Kod projektu na GitHubie</a></footer>
 <script>
 const $=id=>document.getElementById(id);
-const subjects={peace:{pl:"pokój pośród ludzi i narodów",la:"pax inter homines atque nationes",gift:"zgodę serc",image:"światło, które rozprasza mrok waśni"},mercy:{pl:"miłosierdzie dla słabych i utrudzonych",la:"misericordia infirmis et laborantibus",gift:"serce miłosierne",image:"źródło, które nie wysycha"},harvest:{pl:"urodzaj ziemi i chleb powszedni",la:"fructus terrae et panis quotidianus",gift:"obfitość plonów",image:"ziarno, które obumiera, by przynieść owoc"},"feast-day":{pl:"radość dnia świątecznego",la:"gaudium diei festi",gift:"wdzięczność i wesele",image:"dzwon wzywający wiernych do wspólnej modlitwy"},healing:{pl:"pocieszenie chorych i cierpiących",la:"solacium infirmorum et dolentium",gift:"siłę w słabości",image:"delikatny blask po długiej nocy"},pilgrimage:{pl:"bezpieczna droga pielgrzymów",la:"tuta via peregrinorum",gift:"wytrwałość w drodze",image:"gwiazda wskazująca wędrowcom szlak"},gratitude:{pl:"wdzięczność za otrzymane dobro",la:"gratiarum actio pro bonis acceptis",gift:"serce pamiętające o darach",image:"lampa płonąca przed ołtarzem"},repentance:{pl:"skrucha i odnowa serca",la:"contritio et renovatio cordis",gift:"pokorę i odwagę poprawy",image:"ścieżka powrotu do domu"}};
-const types={prayer:{pl:"Modlitwa",la:"Oratio"},blessing:{pl:"Błogosławieństwo",la:"Benedictio"},mass:{pl:"Szkic mszy",la:"Ordo Missae · szkic"},sermon:{pl:"Kazanie",la:"Sermo"},blog:{pl:"Rozważanie",la:"Meditatio"}};
-function makeText(){const kind=$("kind").value,lang=$("language").value,len=$("length").value,key=$("occasion").value,custom=$("custom").value.trim(),s=subjects[key]||subjects.peace,topic=key==="custom"?(custom||"intencja powierzona w modlitwie"):s.pl,latin=key==="custom"?("intentio pro "+(custom||"pace")):s.la;
-const intros=["O Panie, źródło mądrości i wszelkiego dobra, wysłuchaj pokornej prośby sług swoich.","Boże miłosierny, który znasz serca nasze, wejrzyj łaskawie na tych, którzy wzywają Twego imienia.","Wszechmogący Stwórco nieba i ziemi, prowadź nas drogą prawdy, pokory i pokoju."],ends=["Przez Chrystusa, Pana naszego. Amen.","Niech stanie się to ku chwale Twojej i pożytkowi bliźnich. Amen.","A niech pokój Twój pozostanie z nami teraz i po wszystkie dni. Amen."],idx=(key.length+kind.length)%3,intro=intros[idx],end=ends[(idx+1)%3];let p=[];
-if(kind==="prayer")p=[intro,"Prosimy Cię o "+(s.gift||topic)+", abyśmy w codziennych trudach nie zapominali o Twojej dobroci. Niech "+(s.image||"Twoja łaska")+" prowadzi nas ku uczynkom sprawiedliwym i sercom pojednanym.","Ustrzeż nas od pychy, umocnij słabych i naucz nas służyć bliźnim bez szukania nagrody.",end];
-if(kind==="blessing")p=["Niech Pan błogosławi temu miejscu i wszystkim, którzy w nim pracują, odpoczywają lub szukają schronienia.","Niech "+topic+" stanie się dla was źródłem nadziei; niech wasze dłonie czynią dobro, a słowa niosą pociechę.","Niech Bóg Ojciec, Syn i Duch Święty strzegą was i prowadzą ku pokojowi. Amen."];
-if(kind==="mass")p=["Intencja: "+topic+". Poniższy porządek jest szkicem do rozważań, nie tekstem do sprawowania liturgii.","Wezwanie: „Panie, zmiłuj się nad nami”. Następnie chwila ciszy i wspólna modlitwa wiernych w intencji "+topic+".","Czytanie: fragment Pisma Świętego dobrany przez celebransa. Homilia: rozważenie miłosierdzia, pokory i służby bliźniemu.","Modlitwa końcowa: "+intro+" "+end];
-if(kind==="sermon")p=["Bracia i siostry umiłowani w Panu,","Rozważmy dziś "+topic+". Jak ziemia potrzebuje deszczu, tak dusza potrzebuje uczynków miłosierdzia. Nie wystarczy wyznawać dobro słowami, jeśli ręce pozostają zamknięte przed ubogim.","Niech każdy z nas uczyni mały krok ku dobru: pojedna się z sąsiadem, pocieszy strapionego i podzieli chlebem z potrzebującym.","Niech te słowa nie przeminą jak dym nad paleniskiem, lecz zapuszczą korzenie w naszym życiu. Amen."];
-if(kind==="blog")p=["W ciszy średniowiecznego skryptorium skryba przypominał sobie, że nawet najdłuższa droga zaczyna się od jednego kroku.","Temat "+topic+" zaprasza do namysłu nad tym, co człowiek winien Bogu i bliźniemu. Dawni autorzy duchowi chętnie sięgali po obraz pielgrzyma, światła i chleba, aby opisać drogę wiary.","Dziś możemy odczytać tę myśl prosto: dobroć nabiera znaczenia dopiero wtedy, gdy staje się czynem."];
-if(len==="short")p=p.slice(0,Math.min(2,p.length));if(len==="long")p.push("Pamiętajmy również, że cnota wzrasta przez ćwiczenie, a wspólnota umacnia się, gdy jej członkowie dźwigają wzajemnie swoje ciężary. Niech nasza intencja wyda owoc w codziennym życiu.");
-const pl=types[kind].pl+"\n\n"+p.join("\n\n"),la=types[kind].la+"\n\nDomine, fons sapientiae et bonitatis, preces humilium exaudi. Da nobis "+latin+" et dirige corda nostra ad opera iustitiae et caritatis. "+(len==="long"?"Custodi infirmos, consola maerentes et confirma nos in via virtutis. ":"")+"Amen.";return lang==="latin"?la:lang==="bilingual"?pl+"\n\n"+la:pl}
-function generate(){ $("output").textContent=makeText();$("actions").hidden=false;$("status").textContent="Tekst gotowy. Możesz go skopiować lub zapisać."}
-$("occasion").addEventListener("change",()=>{$("custom-wrap").hidden=$("occasion").value!=="custom"});$("generator").addEventListener("submit",e=>{e.preventDefault();generate()});$("copy").addEventListener("click",async()=>{try{await navigator.clipboard.writeText($("output").textContent);$("status").textContent="Skopiowano do schowka."}catch(e){$("status").textContent="Schowek niedostępny. Zaznacz tekst i skopiuj ręcznie."}});$("download").addEventListener("click",()=>{const blob=new Blob([$("output").textContent],{type:"text/plain;charset=utf-8"}),url=URL.createObjectURL(blob),a=document.createElement("a");a.href=url;a.download="sacrascript-tekst.txt";a.click();URL.revokeObjectURL(url)});$("again").addEventListener("click",generate);
+const topics={
+ peace:{pl:"pokój pośród ludzi i narodów",la:"pax inter homines et nationes",gift:"zgodę serc",latinGift:"concordiam cordium",image:"światło rozpraszające mrok waśni"},
+ mercy:{pl:"miłosierdzie dla słabych i utrudzonych",la:"misericordia infirmis et laborantibus",gift:"serce miłosierne",latinGift:"cor misericors",image:"źródło, które nie wysycha"},
+ harvest:{pl:"urodzaj ziemi i chleb powszedni",la:"fructus terrae et panis quotidianus",gift:"obfitość plonów",latinGift:"abundantiam fructuum",image:"ziarno, które przynosi owoc"},
+ "feast-day":{pl:"radość dnia świątecznego",la:"gaudium diei festi",gift:"wdzięczność i wesele",latinGift:"gratiam et laetitiam",image:"dzwon wzywający do wspólnej modlitwy"},
+ healing:{pl:"pocieszenie chorych i cierpiących",la:"solacium infirmorum et dolentium",gift:"siłę w słabości",latinGift:"fortitudinem in infirmitate",image:"blask po długiej nocy"},
+ pilgrimage:{pl:"bezpieczna droga pielgrzymów",la:"via tuta peregrinorum",gift:"wytrwałość w drodze",latinGift:"constantiam in itinere",image:"gwiazda wskazująca wędrowcom szlak"},
+ gratitude:{pl:"wdzięczność za otrzymane dobro",la:"gratiarum actio pro beneficiis acceptis",gift:"serce pamiętające o darach",latinGift:"cor memor beneficiorum",image:"lampa płonąca przed ołtarzem"},
+ repentance:{pl:"skrucha i odnowa serca",la:"contritio et renovatio cordis",gift:"pokorę i odwagę poprawy",latinGift:"humilitatem et virtutem emendandi",image:"ścieżka powrotu do domu"}
+};
+const titles={prayer:["Modlitwa","Oratio"],blessing:["Błogosławieństwo","Benedictio"],mass:["Szkic mszy","Ordo Missae · szkic"],sermon:["Kazanie","Sermo"],blog:["Rozważanie","Meditatio"]};
+const pick=a=>a[Math.floor(Math.random()*a.length)];
+const prayers=[
+["O Panie, źródło mądrości i wszelkiego dobra, wysłuchaj pokornej prośby sług swoich.","Niech Twoja łaska rozjaśnia nasze myśli i prowadzi dłonie ku dobrym uczynkom."],
+["Miłosierny Boże, który znasz tajemnice każdego serca, wejrzyj na nas łaskawie.","Uczyń nas narzędziem pokoju tam, gdzie rodzi się gniew, i nadziei tam, gdzie mieszka lęk."],
+["Stwórco nieba i ziemi, przyjmij tę modlitwę zanoszoną w pokorze.","Naucz nas dostrzegać potrzeby bliźnich i służyć bez pragnienia nagrody."]
+];
+const blessings=[
+["Niech Pan błogosławi temu miejscu i wszystkim, którzy w nim pracują, odpoczywają lub szukają schronienia.","Niech dobro zamieszka przy waszym stole, a zgoda w waszych domach."],
+["Niech Bóg strzeże waszych kroków na drodze i umacnia was w godzinie próby.","Niech wasze słowa niosą pociechę, a wasze ręce będą gotowe do pomocy."],
+["Niech światło Bożej mądrości prowadzi was przez dni jasne i ciemne.","Niech pokój będzie waszym gościem, a wdzięczność codziennym zwyczajem."]
+];
+const sermons=[
+["Bracia i siostry umiłowani w Panu, wiara nie jest jedynie słowem wypowiadanym w murach świątyni.","Poznajemy ją po tym, jak traktujemy ubogiego, chorego i człowieka, który nie może nam się odpłacić."],
+["Człowiek podobny jest do drzewa: korzenie ukryte są przed wzrokiem, lecz to one karmią owoce.","Tak i dobroć, choć często cicha, objawia się w cierpliwości, przebaczeniu i dzieleniu się chlebem."],
+["Niech nikt nie uważa małego dobra za rzecz bez znaczenia.","Jedna pojednawcza rozmowa może ugasić spór, a drobny gest miłosierdzia przywrócić komuś nadzieję."]
+];
+const reflections=[
+["W ciszy skryptorium łatwo uwierzyć, że wielkie dzieła powstają z wielkich gestów.","Tymczasem codzienna cnota rośnie z rzeczy prostych: cierpliwego słowa, uczciwej pracy i pomocy udzielonej bez rozgłosu."],
+["Dawni pielgrzymi mierzyli drogę nie tylko milami, ale także przemianą serca.","Każdy dzień daje sposobność, by odłożyć pychę i wybrać łagodność zamiast gniewu."],
+["Światło świecy nie usuwa całej ciemności, lecz pozwala uczynić następny krok.","Tak samo mały czyn dobra może stać się początkiem zmiany większej, niż przypuszczamy."]
+];
+function generateText(){
+ const kind=$("kind").value,lang=$("language").value,len=$("length").value,key=$("occasion").value,custom=$("custom").value.trim();
+ const t=topics[key]||topics.peace,plTopic=key==="custom"?(custom||"intencja powierzona w modlitwie"):t.pl,laTopic=key==="custom"?"intentio specialis":t.la;
+ const intro=pick(["Boże miłosierny, wysłuchaj naszej modlitwy.","Wszechmogący Panie, prowadź nas drogą prawdy.","O Stwórco wszelkiego dobra, wejrzyj na nas łaskawie."]);
+ const close=pick(["Przez Chrystusa, Pana naszego. Amen.","Niech stanie się to ku chwale Twojej i pożytkowi bliźnich. Amen.","Niech pokój Twój pozostanie z nami po wszystkie dni. Amen."]);
+ let pl=[],la=[];
+ if(kind==="prayer"){const v=pick(prayers);pl=[intro,"Prosimy Cię o "+t.gift+", abyśmy w codziennych trudach nie zapominali o Twojej dobroci.","Niech "+t.image+" prowadzi nas ku uczynkom sprawiedliwym i sercom pojednanym.",...v,close];la=["Domine misericors, preces nostras exaudi.","Da nobis "+t.latinGift+", ut in laboribus cotidianis bonitatem tuam meminerimus.","Lux tua corda nostra ad opera iustitiae et caritatis dirigat.","A superbia nos libera et infirmos confirma.","Per Christum Dominum nostrum. Amen."]}
+ if(kind==="blessing"){const v=pick(blessings);pl=[...v,"Niech błogosławieństwo Ojca, Syna i Ducha Świętego spocznie na was i pozostanie z wami. Amen."];la=["Dominus benedicat huic loco et omnibus qui hic habitant vel laborant.","Pax in domibus vestris, caritas in cordibus et spes in diebus adversis.","Benedictio Dei Patris et Filii et Spiritus Sancti sit semper vobiscum. Amen."]}
+ if(kind==="mass"){pl=["Intencja: "+plTopic+". To szkic do rozważań, nie zatwierdzony tekst liturgiczny.","Wezwanie: „Panie, zmiłuj się nad nami”. Po nim chwila ciszy i modlitwa wiernych.","Czytanie: fragment Pisma Świętego dobrany stosownie do dnia. Homilia: rozważenie miłosierdzia, pokory i służby bliźniemu.","Modlitwa końcowa: "+intro+" "+close];la=["Intentio: "+laTopic+". Haec est meditatio exemplaris, non textus liturgicus approbatus.","Invocatio: Kyrie eleison. Deinde silentium breve et oratio fidelium.","Lectio: locus Sacrae Scripturae diei aptus. Homilia de misericordia, humilitate et servitio.","Oratio finalis: Domine, dona nobis pacem et caritatem. Amen."]}
+ if(kind==="sermon"){const v=pick(sermons);pl=["Bracia i siostry umiłowani w Panu,","Dziś rozważamy "+plTopic+". "+v[0],v[1],"Niech te słowa nie przeminą jak dym nad paleniskiem, lecz zapuszczą korzenie w naszym życiu. Amen."];la=["Fratres carissimi,","Hodie meditamur: "+laTopic+". Fides non solum verbis, sed operibus manifestatur.","Misericordia, patientia et caritas viam ad pacem aperiunt.","Verba haec in cordibus nostris radices agant. Amen."]}
+ if(kind==="blog"){const v=pick(reflections);pl=[v[0],"Temat "+plTopic+" zaprasza do namysłu nad tym, co jesteśmy winni Bogu i bliźniemu.",v[1],"Pytanie na koniec dnia: jaki jeden dobry czyn mogę dziś wykonać?"];la=["In silentio scriptorii animus ad sapientiam veterum recurrit.","Thema: "+laTopic+". Bona voluntas per parva opera cotidie crescit.","Patientia, honestas et misericordia vitam communem illuminant.","Quaestio ad meditandum: quod bonum hodie facere possum?"]}
+ if(len==="short"){pl=pl.slice(0,Math.min(3,pl.length));la=la.slice(0,Math.min(3,la.length))}
+ if(len==="long"){pl.splice(pl.length-1,0,"Pamiętajmy, że cnota wzrasta przez ćwiczenie, a wspólnota umacnia się, gdy jej członkowie dźwigają wzajemnie swoje ciężary.");la.splice(la.length-1,0,"Virtus exercitatione crescit, communitas autem roboratur cum homines onera mutuo portant.")}
+ const title=titles[kind];
+ if(lang==="latin")return title[1]+"\n\n"+la.join("\n\n");
+ if(lang==="bilingual"){
+   const mixed=[title[0]+" · "+title[1]];
+   const count=Math.max(pl.length,la.length);
+   for(let i=0;i<count;i++){if(pl[i])mixed.push(pl[i]);if(la[i])mixed.push(la[i]);}
+   return mixed.join("\n\n");
+ }
+ return title[0]+"\n\n"+pl.join("\n\n");
+}
+function generate(){ $("output").textContent=generateText();$("actions").hidden=false;$("status").textContent="Tekst gotowy. Wybierz „Utwórz inną wersję”, aby wylosować nową treść."}
+$("occasion").addEventListener("change",()=>{$("custom-wrap").hidden=$("occasion").value!=="custom"});
+$("generator").addEventListener("submit",e=>{e.preventDefault();generate()});
+$("copy").addEventListener("click",async()=>{try{await navigator.clipboard.writeText($("output").textContent);$("status").textContent="Skopiowano do schowka."}catch(e){$("status").textContent="Schowek niedostępny. Zaznacz tekst i skopiuj ręcznie."}});
+$("download").addEventListener("click",()=>{const blob=new Blob([$("output").textContent],{type:"text/plain;charset=utf-8"}),url=URL.createObjectURL(blob),a=document.createElement("a");a.href=url;a.download="sacrascript-tekst.txt";a.click();URL.revokeObjectURL(url)});
+$("again").addEventListener("click",generate);
 </script></body></html>
