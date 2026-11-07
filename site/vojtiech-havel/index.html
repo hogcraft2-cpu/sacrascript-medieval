@@ -30,7 +30,7 @@ scene.add(new THREE.HemisphereLight(0xe8d8b7,0x24150d,2));
 const key=new THREE.DirectionalLight(0xffd9a0,3.2);key.position.set(-4,7,8);key.castShadow=true;scene.add(key);
 const fill=new THREE.PointLight(0xb77b3e,42,24);fill.position.set(5,1,5);scene.add(fill);
 const rim=new THREE.PointLight(0x9c6b3e,24,20);rim.position.set(-5,3,-3);scene.add(rim);
-function leatherTexture(){const c=document.createElement('canvas');c.width=1400;c.height=1800;const x=c.getContext('2d);x.fillStyle='#382018';x.fillRect(0,0,c.width,c.height);
+function leatherTexture(){const c=document.createElement('canvas');c.width=1400;c.height=1800;const x=c.getContext('2d');x.fillStyle='#382018';x.fillRect(0,0,c.width,c.height);
 for(let i=0;i<42000;i++){const px=Math.random()*c.width,py=Math.random()*c.height,a=Math.random()*.13;x.fillStyle=Math.random()>.5?'rgba(218,166,105,'+a+')':'rgba(0,0,0,'+a+')';x.fillRect(px,py,Math.random()*4+1,Math.random()*4+1)}
 const g=x.createLinearGradient(0,0,1400,1800);g.addColorStop(0,'rgba(0,0,0,.38)');g.addColorStop(.5,'rgba(122,72,39,.08)');g.addColorStop(1,'rgba(0,0,0,.52)');x.fillStyle=g;x.fillRect(0,0,1400,1800);
 x.strokeStyle='#a9824c';x.lineWidth=13;x.strokeRect(75,75,1250,1650);x.strokeStyle='rgba(209,177,118,.55)';x.lineWidth=3;x.strokeRect(105,105,1190,1590);
