@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="pl"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
+<meta name="theme-color" content="#17120f"><title>Vojtiech Havel — 1400 rok pański</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&family=IM+Fell+English:ital@0;1&display=swap');
+:root{color-scheme:dark;--gold:#c6a56a}*{box-sizing:border-box}html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#17120f;color:#eee6d6;font-family:Georgia,serif}
+body{background:radial-gradient(ellipse at 50% 42%,#403126 0,#211914 44%,#100d0b 100%)}#scene{position:fixed;inset:0}canvas{display:block;width:100%;height:100%;outline:none}
+.vignette{pointer-events:none;position:fixed;inset:0;background:radial-gradient(ellipse at center,transparent 38%,rgba(0,0,0,.52) 100%);z-index:1}
+header{position:fixed;z-index:3;top:26px;left:0;right:0;text-align:center;pointer-events:none;text-shadow:0 2px 12px #000}
+.kicker{font:11px Cinzel,serif;letter-spacing:.34em;text-transform:uppercase;color:#bda77e}h1{font:500 clamp(18px,2.4vw,27px) Cinzel,serif;letter-spacing:.13em;margin:9px 0 5px;color:#ead8b6}.subtitle{font:italic 14px 'IM Fell English',serif;color:#b6a58a}
+.controls{position:fixed;z-index:4;left:50%;bottom:28px;transform:translateX(-50%);display:flex;align-items:center;gap:10px;padding:10px 13px;border:1px solid rgba(190,157,103,.32);border-radius:4px;background:rgba(18,13,10,.78);box-shadow:0 12px 36px #0008;backdrop-filter:blur(10px)}
+button{appearance:none;border:1px solid rgba(197,164,109,.48);background:linear-gradient(#4a3425,#2a1c14);color:#ead9b9;padding:11px 16px;font:11px Cinzel,serif;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;transition:.2s}button:hover:not(:disabled){background:linear-gradient(#65472e,#392619);border-color:#d2b47c}button:disabled{opacity:.3;cursor:default}
+#status{min-width:130px;text-align:center;font:italic 13px 'IM Fell English',serif;color:#c2b293}.hint{position:fixed;z-index:3;bottom:92px;left:0;right:0;text-align:center;color:#9c8a70;font:italic 13px 'IM Fell English',serif;pointer-events:none}
+.corner{position:fixed;z-index:2;width:34px;height:34px;border-color:rgba(184,145,88,.34);pointer-events:none}.tl{top:17px;left:17px;border-top:1px solid;border-left:1px solid}.tr{top:17px;right:17px;border-top:1px solid;border-right:1px solid}.bl{bottom:17px;left:17px;border-bottom:1px solid;border-left:1px solid}.br{bottom:17px;right:17px;border-bottom:1px solid;border-right:1px solid}
+@media(max-width:600px){header{top:18px}.controls{bottom:18px;gap:6px;padding:8px}button{padding:10px 11px;font-size:10px}#status{min-width:82px;font-size:12px}.hint{bottom:82px;font-size:12px}}
+</style>
+<script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js"}}</script>
+</head><body>
+<div id="scene"></div><div class="vignette"></div><div class="corner tl"></div><div class="corner tr"></div><div class="corner bl"></div><div class="corner br"></div>
+<header><div class="kicker">Anno Domini MCD</div><h1>VOJTIECH HAVEL</h1><div class="subtitle">Księga z roku pańskiego 1400</div></header>
+<div class="hint" id="hint">Dotknij księgi, aby ją otworzyć</div>
+<div class="controls"><button id="prev" disabled>Poprzednia</button><div id="status">Okładka</div><button id="next">Otwórz księgę</button></div>
+<script type="module">
+import * as THREE from 'three';
+const host=document.querySelector('#scene'),scene=new THREE.Scene();scene.background=new THREE.Color('#211812');
+const camera=new THREE.PerspectiveCamera(34,innerWidth/innerHeight,.1,100);camera.position.set(0,1.05,16.8);camera.lookAt(0,0,0);
+const renderer=new THREE.WebGLRenderer({antialias:true,alpha:false});renderer.setPixelRatio(Math.min(devicePixelRatio,2));renderer.setSize(innerWidth,innerHeight);renderer.shadowMap.enabled=true;renderer.shadowMap.type=THREE.PCFSoftShadowMap;renderer.outputColorSpace=THREE.SRGBColorSpace;renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.toneMappingExposure=1.12;host.appendChild(renderer.domElement);
+scene.add(new THREE.HemisphereLight(0xe8d8b7,0x24150d,2));
+const key=new THREE.DirectionalLight(0xffd9a0,3.2);key.position.set(-4,7,8);key.castShadow=true;scene.add(key);
+const fill=new THREE.PointLight(0xb77b3e,42,24);fill.position.set(5,1,5);scene.add(fill);
+const rim=new THREE.PointLight(0x9c6b3e,24,20);rim.position.set(-5,3,-3);scene.add(rim);
+function leatherTexture(){const c=document.createElement('canvas');c.width=1400;c.height=1800;const x=c.getContext('2d);x.fillStyle='#382018';x.fillRect(0,0,c.width,c.height);
+for(let i=0;i<42000;i++){const px=Math.random()*c.width,py=Math.random()*c.height,a=Math.random()*.13;x.fillStyle=Math.random()>.5?'rgba(218,166,105,'+a+')':'rgba(0,0,0,'+a+')';x.fillRect(px,py,Math.random()*4+1,Math.random()*4+1)}
+const g=x.createLinearGradient(0,0,1400,1800);g.addColorStop(0,'rgba(0,0,0,.38)');g.addColorStop(.5,'rgba(122,72,39,.08)');g.addColorStop(1,'rgba(0,0,0,.52)');x.fillStyle=g;x.fillRect(0,0,1400,1800);
+x.strokeStyle='#a9824c';x.lineWidth=13;x.strokeRect(75,75,1250,1650);x.strokeStyle='rgba(209,177,118,.55)';x.lineWidth=3;x.strokeRect(105,105,1190,1590);
+x.strokeStyle='#bd995d';x.lineWidth=5;for(const q of [[115,115,1,1],[1285,115,-1,1],[115,1685,1,-1],[1285,1685,-1,-1]]){x.save();x.translate(q[0],q[1]);x.scale(q[2],q[3]);x.beginPath();x.moveTo(0,95);x.bezierCurveTo(8,20,65,4,100,0);x.bezierCurveTo(78,35,50,48,0,45);x.stroke();x.beginPath();x.arc(30,28,12,0,Math.PI*2);x.stroke();x.restore()}
+x.textAlign='center';x.fillStyle='#d4b77e';x.shadowColor='#100905';x.shadowBlur=12;x.font='600 91px Cinzel,Georgia,serif';x.fillText('VOJTIECH',700,780);x.font='600 108px Cinzel,Georgia,serif';x.fillText('HAVEL',700,920);
+x.strokeStyle='#c3a36b';x.lineWidth=3;x.beginPath();x.moveTo(350,1010);x.lineTo(1050,1010);x.stroke();x.font='italic 54px "IM Fell English",Georgia,serif';x.fillText('1400 rok pański',700,1110);x.font='24px Cinzel,Georgia,serif';x.fillStyle='rgba(211,183,126,.65)';x.fillText('✦  ✦  ✦',700,1215);
+const t=new THREE.CanvasTexture(c);t.colorSpace=THREE.SRGBColorSpace;t.anisotropy=renderer.capabilities.getMaxAnisotropy();return t}
+function parchmentTexture(){const c=document.createElement('canvas');c.width=1024;c.height=1400;const x=c.getContext('2d');x.fillStyle='#d9c69d';x.fillRect(0,0,c.width,c.height);const grad=x.createRadialGradient(500,650,100,500,700,900);grad.addColorStop(0,'#e7d8b7');grad.addColorStop(.72,'#d8c49b');grad.addColorStop(1,'#aa9168');x.fillStyle=grad;x.fillRect(0,0,c.width,c.height);for(let i=0;i<27000;i++){const px=Math.random()*1024,py=Math.random()*1400;x.fillStyle=Math.random()>.5?'rgba(87,58,29,.055)':'rgba(255,245,210,.09)';x.fillRect(px,py,Math.random()*2+.3,Math.random()*2+.3)}const t=new THREE.CanvasTexture(c);t.colorSpace=THREE.SRGBColorSpace;t.anisotropy=renderer.capabilities.getMaxAnisotropy();return t}
+const leather=leatherTexture(),paper=parchmentTexture(),root=new THREE.Group();scene.add(root);const W=4.15,H=5.65;
+const leatherMat=new THREE.MeshStandardMaterial({map:leather,roughness:.88,metalness:.08}),pageMat=new THREE.MeshStandardMaterial({map:paper,roughness:.98,side:THREE.DoubleSide}),edgeMat=new THREE.MeshStandardMaterial({color:'#bca77f',roughness:1}),darkMat=new THREE.MeshStandardMaterial({color:'#24140e',roughness:.94}),goldMat=new THREE.MeshStandardMaterial({color:'#b99558',metalness:.72,roughness:.32});
+function box(w,h,d,mat,x,y,z,parent=root){const m=new THREE.Mesh(new THREE.BoxGeometry(w,h,d),mat);m.position.set(x,y,z);m.castShadow=true;m.receiveShadow=true;parent.add(m);return m}
+box(W*2-.16,H-.12,.36,edgeMat,0,0,-.15);
+const leftPages=new THREE.Group();leftPages.position.set(-.02,0,.08);root.add(leftPages);const rightPages=new THREE.Group();rightPages.position.set(.02,0,.08);root.add(rightPages);
+function pagePlane(parent,x,angle=0,z=0){const mesh=new THREE.Mesh(new THREE.PlaneGeometry(W-.12,H-.2,28,16),pageMat);mesh.position.set(x,0,z);mesh.rotation.y=angle;mesh.castShadow=true;mesh.receiveShadow=true;parent.add(mesh);return mesh}
+pagePlane(leftPages,-W/2,Math.PI,.18);pagePlane(rightPages,W/2,0,.18);
+box(W-.1,H-.16,.17,edgeMat,-W/2,0,-.02,leftPages);box(W-.1,H-.16,.17,edgeMat,W/2,0,-.02,rightPages);box(.34,H+.04,.58,darkMat,0,0,-.04);
+const coverPivot=new THREE.Group();coverPivot.position.set(0,0,.35);root.add(coverPivot);
+const cover=new THREE.Mesh(new THREE.BoxGeometry(W,H,.22),leatherMat);cover.position.set(W/2,0,0);cover.castShadow=true;cover.receiveShadow=true;coverPivot.add(cover);
+const innerCover=new THREE.Mesh(new THREE.PlaneGeometry(W-.16,H-.16),new THREE.MeshStandardMaterial({color:'#5a3925',roughness:.95}));innerCover.position.set(W/2,0,.116);coverPivot.add(innerCover);
+function cornerMetal(x,y){const p=new THREE.Mesh(new THREE.BoxGeometry(.32,.32,.045),goldMat);p.position.set(x,y,.135);coverPivot.add(p);const stud=new THREE.Mesh(new THREE.SphereGeometry(.055,16,12),goldMat);stud.position.set(x,y,.17);coverPivot.add(stud)}
+cornerMetal(.22,H/2-.22);cornerMetal(W-.22,H/2-.22);cornerMetal(.22,-H/2+.22);cornerMetal(W-.22,-H/2+.22);box(.22,.7,.1,goldMat,W-.14,0,.2,coverPivot);
+box(W,H,.16,darkMat,-W/2,0,-.24);
+const movingPivot=new THREE.Group();movingPivot.position.set(0,0,.34);root.add(movingPivot);
+const moving=new THREE.Mesh(new THREE.PlaneGeometry(W-.12,H-.2,36,20),pageMat);moving.position.x=(W-.12)/2;moving.castShadow=true;moving.receiveShadow=true;movingPivot.add(moving);
+let opened=false,turns=0,turning=false,turnStart=0,turnFrom=0,turnTo=0;const clock=new THREE.Clock();
+function ease(t){return t<.5?4*t*t*t:1-Math.pow(-2*t+2,3)/2}
+function setOpenState(v){opened=v;document.querySelector('#hint').textContent=v?'Strony są puste — możemy później dodać kronikę':'Dotknij księgi, aby ją otworzyć';document.querySelector('#status').textContent=v?'Strona '+(turns*2+1)+'–'+(turns*2+2):'Okładka';document.querySelector('#prev').disabled=!v||turns===0;document.querySelector('#next').textContent=v?'Następna strona':'Otwórz księgę'}
+function openBook(){if(opened||turning)return;turning=true;turnStart=clock.elapsedTime;turnFrom=0;turnTo=Math.PI;document.querySelector('#status').textContent='Otwieranie…'}
+function turnPage(dir){if(!opened||turning)return;if(dir>0&&turns>=12)return;if(dir<0&&turns<=0)return;turning=true;turnStart=clock.elapsedTime;turnFrom=movingPivot.rotation.y;turnTo=dir>0?Math.PI:0;turns+=dir;document.querySelector('#status').textContent='Strona '+(turns*2+1)+'–'+(turns*2+2);document.querySelector('#prev').disabled=turns===0;document.querySelector('#next').disabled=turns===12}
+function update(){const elapsed=clock.elapsedTime;if(turning){const p=Math.min(1,(elapsed-turnStart)/1.35),e=ease(p),angle=turnFrom+(turnTo-turnFrom)*e;if(!opened){coverPivot.rotation.y=-Math.PI*e;movingPivot.rotation.y=0}else movingPivot.rotation.y=angle;
+const pos=moving.geometry.attributes.position;for(let i=0;i<pos.count;i++){const x=pos.getX(i),u=x/(W-.12);pos.setZ(i,Math.sin(Math.PI*u)*Math.sin(p*Math.PI)*.2)}pos.needsUpdate=true;moving.geometry.computeVertexNormals();
+if(p>=1){turning=false;if(!opened){coverPivot.rotation.y=-Math.PI;setOpenState(true);document.querySelector('#prev').disabled=true}else{movingPivot.rotation.y=turnTo;document.querySelector('#prev').disabled=turns===0;document.querySelector('#next').disabled=turns===12}}}
+root.rotation.x=-.10;root.rotation.z=-.025;renderer.render(scene,camera)}
+renderer.setAnimationLoop(update);
+document.querySelector('#next').addEventListener('click',()=>opened?turnPage(1):openBook());document.querySelector('#prev').addEventListener('click',()=>turnPage(-1));renderer.domElement.addEventListener('click',()=>{if(!opened)openBook()});renderer.domElement.addEventListener('dblclick',()=>{if(opened)turnPage(1)});
+window.addEventListener('keydown',e=>{if(e.key==='ArrowRight'){opened?turnPage(1):openBook()}if(e.key==='ArrowLeft')turnPage(-1);if(e.key==='Escape')document.exitFullscreen?.()});
+window.addEventListener('resize',()=>{camera.aspect=innerWidth/innerHeight;camera.position.z=innerWidth<650?20:16.8;camera.updateProjectionMatrix();renderer.setSize(innerWidth,innerHeight)});setOpenState(false);
+</script></body></html>
