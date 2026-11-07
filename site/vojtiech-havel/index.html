@@ -1,72 +1,65 @@
-<!doctype html>
-<html lang="pl"><head>
-<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
-<meta name="theme-color" content="#17120f"><title>Vojtiech Havel — 1400 rok pański</title>
+<!doctype html><html lang="pl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Vojtiech Havel — 1400</title>
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&family=IM+Fell+English:ital@0;1&display=swap');
-:root{color-scheme:dark;--gold:#c6a56a}*{box-sizing:border-box}html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#17120f;color:#eee6d6;font-family:Georgia,serif}
-body{background:radial-gradient(ellipse at 50% 42%,#403126 0,#211914 44%,#100d0b 100%)}#scene{position:fixed;inset:0}canvas{display:block;width:100%;height:100%;outline:none}
-.vignette{pointer-events:none;position:fixed;inset:0;background:radial-gradient(ellipse at center,transparent 38%,rgba(0,0,0,.52) 100%);z-index:1}
-header{position:fixed;z-index:3;top:26px;left:0;right:0;text-align:center;pointer-events:none;text-shadow:0 2px 12px #000}
-.kicker{font:11px Cinzel,serif;letter-spacing:.34em;text-transform:uppercase;color:#bda77e}h1{font:500 clamp(18px,2.4vw,27px) Cinzel,serif;letter-spacing:.13em;margin:9px 0 5px;color:#ead8b6}.subtitle{font:italic 14px 'IM Fell English',serif;color:#b6a58a}
-.controls{position:fixed;z-index:4;left:50%;bottom:28px;transform:translateX(-50%);display:flex;align-items:center;gap:10px;padding:10px 13px;border:1px solid rgba(190,157,103,.32);border-radius:4px;background:rgba(18,13,10,.78);box-shadow:0 12px 36px #0008;backdrop-filter:blur(10px)}
-button{appearance:none;border:1px solid rgba(197,164,109,.48);background:linear-gradient(#4a3425,#2a1c14);color:#ead9b9;padding:11px 16px;font:11px Cinzel,serif;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;transition:.2s}button:hover:not(:disabled){background:linear-gradient(#65472e,#392619);border-color:#d2b47c}button:disabled{opacity:.3;cursor:default}
-#status{min-width:130px;text-align:center;font:italic 13px 'IM Fell English',serif;color:#c2b293}.hint{position:fixed;z-index:3;bottom:92px;left:0;right:0;text-align:center;color:#9c8a70;font:italic 13px 'IM Fell English',serif;pointer-events:none}
-.corner{position:fixed;z-index:2;width:34px;height:34px;border-color:rgba(184,145,88,.34);pointer-events:none}.tl{top:17px;left:17px;border-top:1px solid;border-left:1px solid}.tr{top:17px;right:17px;border-top:1px solid;border-right:1px solid}.bl{bottom:17px;left:17px;border-bottom:1px solid;border-left:1px solid}.br{bottom:17px;right:17px;border-bottom:1px solid;border-right:1px solid}
-@media(max-width:600px){header{top:18px}.controls{bottom:18px;gap:6px;padding:8px}button{padding:10px 11px;font-size:10px}#status{min-width:82px;font-size:12px}.hint{bottom:82px;font-size:12px}}
-</style>
-<script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js"}}</script>
-</head><body>
-<div id="scene"></div><div class="vignette"></div><div class="corner tl"></div><div class="corner tr"></div><div class="corner bl"></div><div class="corner br"></div>
-<header><div class="kicker">Anno Domini MCD</div><h1>VOJTIECH HAVEL</h1><div class="subtitle">Księga z roku pańskiego 1400</div></header>
-<div class="hint" id="hint">Dotknij księgi, aby ją otworzyć</div>
-<div class="controls"><button id="prev" disabled>Poprzednia</button><div id="status">Okładka</div><button id="next">Otwórz księgę</button></div>
-<script type="module">
-import * as THREE from 'three';
-const host=document.querySelector('#scene'),scene=new THREE.Scene();scene.background=new THREE.Color('#211812');
-const camera=new THREE.PerspectiveCamera(34,innerWidth/innerHeight,.1,100);camera.position.set(0,1.05,16.8);camera.lookAt(0,0,0);
-const renderer=new THREE.WebGLRenderer({antialias:true,alpha:false});renderer.setPixelRatio(Math.min(devicePixelRatio,2));renderer.setSize(innerWidth,innerHeight);renderer.shadowMap.enabled=true;renderer.shadowMap.type=THREE.PCFSoftShadowMap;renderer.outputColorSpace=THREE.SRGBColorSpace;renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.toneMappingExposure=1.12;host.appendChild(renderer.domElement);
-scene.add(new THREE.HemisphereLight(0xe8d8b7,0x24150d,2));
-const key=new THREE.DirectionalLight(0xffd9a0,3.2);key.position.set(-4,7,8);key.castShadow=true;scene.add(key);
-const fill=new THREE.PointLight(0xb77b3e,42,24);fill.position.set(5,1,5);scene.add(fill);
-const rim=new THREE.PointLight(0x9c6b3e,24,20);rim.position.set(-5,3,-3);scene.add(rim);
-function leatherTexture(){const c=document.createElement('canvas');c.width=1400;c.height=1800;const x=c.getContext('2d');x.fillStyle='#382018';x.fillRect(0,0,c.width,c.height);
-for(let i=0;i<42000;i++){const px=Math.random()*c.width,py=Math.random()*c.height,a=Math.random()*.13;x.fillStyle=Math.random()>.5?'rgba(218,166,105,'+a+')':'rgba(0,0,0,'+a+')';x.fillRect(px,py,Math.random()*4+1,Math.random()*4+1)}
-const g=x.createLinearGradient(0,0,1400,1800);g.addColorStop(0,'rgba(0,0,0,.38)');g.addColorStop(.5,'rgba(122,72,39,.08)');g.addColorStop(1,'rgba(0,0,0,.52)');x.fillStyle=g;x.fillRect(0,0,1400,1800);
-x.strokeStyle='#a9824c';x.lineWidth=13;x.strokeRect(75,75,1250,1650);x.strokeStyle='rgba(209,177,118,.55)';x.lineWidth=3;x.strokeRect(105,105,1190,1590);
-x.strokeStyle='#bd995d';x.lineWidth=5;for(const q of [[115,115,1,1],[1285,115,-1,1],[115,1685,1,-1],[1285,1685,-1,-1]]){x.save();x.translate(q[0],q[1]);x.scale(q[2],q[3]);x.beginPath();x.moveTo(0,95);x.bezierCurveTo(8,20,65,4,100,0);x.bezierCurveTo(78,35,50,48,0,45);x.stroke();x.beginPath();x.arc(30,28,12,0,Math.PI*2);x.stroke();x.restore()}
-const herald=new Image();herald.onload=()=>{x.drawImage(herald,420,170,560,760);t.needsUpdate=true};herald.src='crest.svg';
-x.textAlign='center';x.fillStyle='#d4b77e';x.shadowColor='#100905';x.shadowBlur=12;x.font='600 91px Cinzel,Georgia,serif';x.fillText('VOJTIECH',700,1120);x.font='600 108px Cinzel,Georgia,serif';x.fillText('HAVEL',700,1250);
-x.strokeStyle='#c3a36b';x.lineWidth=3;x.beginPath();x.moveTo(350,1320);x.lineTo(1050,1320);x.stroke();x.font='italic 54px "IM Fell English",Georgia,serif';x.fillText('1400 rok pański',700,1420);x.font='24px Cinzel,Georgia,serif';x.fillStyle='rgba(211,183,126,.65)';x.fillText('✦  ✦  ✦',700,1510);
-const t=new THREE.CanvasTexture(c);t.colorSpace=THREE.SRGBColorSpace;t.anisotropy=renderer.capabilities.getMaxAnisotropy();return t}
-function parchmentTexture(){const c=document.createElement('canvas');c.width=1024;c.height=1400;const x=c.getContext('2d');x.fillStyle='#d9c69d';x.fillRect(0,0,c.width,c.height);const grad=x.createRadialGradient(500,650,100,500,700,900);grad.addColorStop(0,'#e7d8b7');grad.addColorStop(.72,'#d8c49b');grad.addColorStop(1,'#aa9168');x.fillStyle=grad;x.fillRect(0,0,c.width,c.height);for(let i=0;i<27000;i++){const px=Math.random()*1024,py=Math.random()*1400;x.fillStyle=Math.random()>.5?'rgba(87,58,29,.055)':'rgba(255,245,210,.09)';x.fillRect(px,py,Math.random()*2+.3,Math.random()*2+.3)}const t=new THREE.CanvasTexture(c);t.colorSpace=THREE.SRGBColorSpace;t.anisotropy=renderer.capabilities.getMaxAnisotropy();return t}
-const leather=leatherTexture(),paper=parchmentTexture(),root=new THREE.Group();scene.add(root);const W=4.15,H=5.65;
-const leatherMat=new THREE.MeshStandardMaterial({map:leather,roughness:.88,metalness:.08}),pageMat=new THREE.MeshStandardMaterial({map:paper,roughness:.98,side:THREE.DoubleSide}),edgeMat=new THREE.MeshStandardMaterial({color:'#bca77f',roughness:1}),darkMat=new THREE.MeshStandardMaterial({color:'#24140e',roughness:.94}),goldMat=new THREE.MeshStandardMaterial({color:'#b99558',metalness:.72,roughness:.32});
-function box(w,h,d,mat,x,y,z,parent=root){const m=new THREE.Mesh(new THREE.BoxGeometry(w,h,d),mat);m.position.set(x,y,z);m.castShadow=true;m.receiveShadow=true;parent.add(m);return m}
-box(W*2-.16,H-.12,.36,edgeMat,0,0,-.15);
-const leftPages=new THREE.Group();leftPages.position.set(-.02,0,.08);root.add(leftPages);const rightPages=new THREE.Group();rightPages.position.set(.02,0,.08);root.add(rightPages);
-function pagePlane(parent,x,angle=0,z=0){const mesh=new THREE.Mesh(new THREE.PlaneGeometry(W-.12,H-.2,28,16),pageMat);mesh.position.set(x,0,z);mesh.rotation.y=angle;mesh.castShadow=true;mesh.receiveShadow=true;parent.add(mesh);return mesh}
-pagePlane(leftPages,-W/2,Math.PI,.18);pagePlane(rightPages,W/2,0,.18);
-box(W-.1,H-.16,.17,edgeMat,-W/2,0,-.02,leftPages);box(W-.1,H-.16,.17,edgeMat,W/2,0,-.02,rightPages);box(.34,H+.04,.58,darkMat,0,0,-.04);
-const coverPivot=new THREE.Group();coverPivot.position.set(0,0,.35);root.add(coverPivot);
-const cover=new THREE.Mesh(new THREE.BoxGeometry(W,H,.22),leatherMat);cover.position.set(W/2,0,0);cover.castShadow=true;cover.receiveShadow=true;coverPivot.add(cover);
-const innerCover=new THREE.Mesh(new THREE.PlaneGeometry(W-.16,H-.16),new THREE.MeshStandardMaterial({color:'#5a3925',roughness:.95}));innerCover.position.set(W/2,0,.116);coverPivot.add(innerCover);
-function cornerMetal(x,y){const p=new THREE.Mesh(new THREE.BoxGeometry(.32,.32,.045),goldMat);p.position.set(x,y,.135);coverPivot.add(p);const stud=new THREE.Mesh(new THREE.SphereGeometry(.055,16,12),goldMat);stud.position.set(x,y,.17);coverPivot.add(stud)}
-cornerMetal(.22,H/2-.22);cornerMetal(W-.22,H/2-.22);cornerMetal(.22,-H/2+.22);cornerMetal(W-.22,-H/2+.22);box(.22,.7,.1,goldMat,W-.14,0,.2,coverPivot);
-box(W,H,.16,darkMat,-W/2,0,-.24);
-const movingPivot=new THREE.Group();movingPivot.position.set(0,0,.34);root.add(movingPivot);
-const moving=new THREE.Mesh(new THREE.PlaneGeometry(W-.12,H-.2,36,20),pageMat);moving.position.x=(W-.12)/2;moving.castShadow=true;moving.receiveShadow=true;movingPivot.add(moving);
-let opened=false,turns=0,turning=false,turnStart=0,turnFrom=0,turnTo=0;const clock=new THREE.Clock();
-function ease(t){return t<.5?4*t*t*t:1-Math.pow(-2*t+2,3)/2}
-function setOpenState(v){opened=v;document.querySelector('#hint').textContent=v?'Strony są puste — możemy później dodać kronikę':'Dotknij księgi, aby ją otworzyć';document.querySelector('#status').textContent=v?'Strona '+(turns*2+1)+'–'+(turns*2+2):'Okładka';document.querySelector('#prev').disabled=!v||turns===0;document.querySelector('#next').textContent=v?'Następna strona':'Otwórz księgę'}
-function openBook(){if(opened||turning)return;turning=true;turnStart=clock.elapsedTime;turnFrom=0;turnTo=Math.PI;document.querySelector('#status').textContent='Otwieranie…'}
-function turnPage(dir){if(!opened||turning)return;if(dir>0&&turns>=12)return;if(dir<0&&turns<=0)return;turning=true;turnStart=clock.elapsedTime;turnFrom=movingPivot.rotation.y;turnTo=dir>0?Math.PI:0;turns+=dir;document.querySelector('#status').textContent='Strona '+(turns*2+1)+'–'+(turns*2+2);document.querySelector('#prev').disabled=turns===0;document.querySelector('#next').disabled=turns===12}
-function update(){const elapsed=clock.elapsedTime;if(turning){const p=Math.min(1,(elapsed-turnStart)/1.35),e=ease(p),angle=turnFrom+(turnTo-turnFrom)*e;if(!opened){coverPivot.rotation.y=-Math.PI*e;movingPivot.rotation.y=0}else movingPivot.rotation.y=angle;
-const pos=moving.geometry.attributes.position;for(let i=0;i<pos.count;i++){const x=pos.getX(i),u=x/(W-.12);pos.setZ(i,Math.sin(Math.PI*u)*Math.sin(p*Math.PI)*.2)}pos.needsUpdate=true;moving.geometry.computeVertexNormals();
-if(p>=1){turning=false;if(!opened){coverPivot.rotation.y=-Math.PI;setOpenState(true);document.querySelector('#prev').disabled=true}else{movingPivot.rotation.y=turnTo;document.querySelector('#prev').disabled=turns===0;document.querySelector('#next').disabled=turns===12}}}
-root.rotation.x=-.10;root.rotation.z=-.025;renderer.render(scene,camera)}
-renderer.setAnimationLoop(update);
-document.querySelector('#next').addEventListener('click',()=>opened?turnPage(1):openBook());document.querySelector('#prev').addEventListener('click',()=>turnPage(-1));renderer.domElement.addEventListener('click',()=>{if(!opened)openBook()});renderer.domElement.addEventListener('dblclick',()=>{if(opened)turnPage(1)});
-window.addEventListener('keydown',e=>{if(e.key==='ArrowRight'){opened?turnPage(1):openBook()}if(e.key==='ArrowLeft')turnPage(-1);if(e.key==='Escape')document.exitFullscreen?.()});
-window.addEventListener('resize',()=>{camera.aspect=innerWidth/innerHeight;camera.position.z=innerWidth<650?20:16.8;camera.updateProjectionMatrix();renderer.setSize(innerWidth,innerHeight)});setOpenState(false);
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=IM+Fell+English:ital@0;1&family=Uncial+Antiqua&display=swap');
+*{box-sizing:border-box}html,body{margin:0;width:100%;height:100%;overflow:hidden}body{color:#eadcc0;background:radial-gradient(ellipse at 50% 45%,#49372a,#211812 55%,#0e0b09);font-family:Georgia,serif}
+header{position:absolute;top:18px;left:0;right:0;text-align:center;z-index:10;text-shadow:0 2px 12px #000}.kicker{font:11px Cinzel;letter-spacing:.35em;color:#bda77e}h1{font:500 clamp(18px,2.5vw,28px) Cinzel;letter-spacing:.14em;margin:8px 0 3px;color:#ead8b6}.subtitle{font:italic 14px 'IM Fell English';color:#b6a58a}
+.stage{position:absolute;inset:100px 0 100px;display:flex;align-items:center;justify-content:center;perspective:1800px}
+.book{position:relative;width:min(38vw,430px);height:min(62vh,570px);min-width:280px;min-height:380px;transform-style:preserve-3d;transition:transform 1s cubic-bezier(.2,.75,.18,1);filter:drop-shadow(0 30px 28px #0009)}
+.book.open{transform:translateX(50%)}
+.pageblock{position:absolute;inset:8px 0;background:repeating-linear-gradient(0deg,#b9a47d 0,#eadbb8 2px,#c9b58e 4px);border:1px solid #a68b5c;box-shadow:inset 0 0 18px #70543366;transform:translateZ(-13px)}
+.spread{position:absolute;inset:0;display:flex;transform:translateZ(-4px);opacity:0;transition:opacity .3s .3s}.book.open .spread{opacity:1}
+.leaf{position:relative;width:50%;height:100%;padding:34px 30px 28px;background:radial-gradient(ellipse at center,#f0e4c6,#e3d2aa 76%,#b79d70);color:#2d2118;overflow:hidden;box-shadow:inset 0 0 24px #80603b55}
+.leaf.left{border-right:1px solid #a88b60}.leaf.right{border-left:1px solid #b49a6b}
+.leaf:before{content:"";position:absolute;inset:13px;border:1px solid #9d8055;opacity:.5;pointer-events:none}
+.spine-shadow{position:absolute;left:50%;top:0;bottom:0;width:18px;transform:translateX(-50%);z-index:3;background:linear-gradient(90deg,#6e4e2d44,#402b1c22,#6e4e2d44);pointer-events:none}
+.cover{position:absolute;z-index:5;inset:0;transform-origin:left center;transform-style:preserve-3d;transition:transform 1.25s cubic-bezier(.18,.7,.15,1);cursor:pointer}.book.open .cover{transform:rotateY(-166deg)}
+.cover-front,.cover-inside{position:absolute;inset:0;backface-visibility:hidden;border-radius:3px}
+.cover-front{background:linear-gradient(115deg,#1a0d09,#4a2818 45%,#28140d);border:8px solid #24130c;box-shadow:inset 0 0 0 2px #9c7440,inset 0 0 0 7px #3b2114,inset 0 0 55px #080403;display:flex;align-items:center;justify-content:center}
+.cover-front:before{content:"";position:absolute;inset:16px;border:2px solid #b18a4e;box-shadow:inset 0 0 0 5px #2a170f,inset 0 0 0 6px #9a7442}
+.cover-art{position:relative;z-index:1;width:78%;height:82%;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center}
+.cover-art img{width:74%;height:65%;object-fit:contain;filter:drop-shadow(0 7px 5px #000b);margin-bottom:8px}
+.cover-name{font:600 clamp(16px,2vw,23px) Cinzel;letter-spacing:.1em;color:#e0c38b}.cover-date{font:italic 17px 'IM Fell English';color:#c6a56a;margin-top:12px}
+.cover-inside{transform:rotateY(180deg);background:linear-gradient(110deg,#3c2115,#6a4227,#3a2014);border:8px solid #24130c}.cover-inside:after{content:"";position:absolute;inset:18px;border:1px solid #a47e49}
+.corner{position:absolute;width:30px;height:30px;border:2px solid #bd9859;z-index:2;opacity:.8}.c1{top:17px;left:17px}.c2{top:17px;right:17px}.c3{bottom:17px;left:17px}.c4{bottom:17px;right:17px}
+.testpage{font:16px/1.65 'IM Fell English',Georgia,serif;position:relative;z-index:1}.page-title{text-align:center;font:600 16px Cinzel;letter-spacing:.06em;margin:0 0 16px;color:#5b3821}.illuminated{float:left;font:60px 'Uncial Antiqua';line-height:.9;padding:2px 8px 0 0;color:#8b241c}
+.page-number{position:absolute;bottom:17px;left:0;right:0;text-align:center;font:italic 13px 'IM Fell English';color:#765a39}
+.herald-page{display:block;width:75%;height:70%;object-fit:contain;margin:8px auto 0;mix-blend-mode:multiply}
+.map-svg{width:100%;height:68%;margin-top:10px;border:1px solid #9a8056;background:#d8c69f}
+.turning{position:absolute;z-index:4;left:50%;top:0;width:50%;height:100%;transform-origin:left center;transform-style:preserve-3d;display:none}.turning.active{display:block;animation:turn .9s cubic-bezier(.3,.65,.2,1) forwards}
+.turn-face{position:absolute;inset:0;padding:34px 30px;background:radial-gradient(ellipse at center,#f0e4c6,#d8c49b);color:#2d2118;backface-visibility:hidden;box-shadow:inset 0 0 24px #80603b55}.turn-face.back{transform:rotateY(180deg)}
+@keyframes turn{from{transform:rotateY(0)}to{transform:rotateY(-180deg)}}
+.controls{position:absolute;z-index:12;bottom:24px;left:50%;transform:translateX(-50%);display:flex;align-items:center;gap:10px;padding:10px 13px;border:1px solid #8f6b3c66;border-radius:4px;background:#140e0be8;box-shadow:0 12px 36px #0008}
+button{border:1px solid #b38d55;background:linear-gradient(#503522,#2a1b12);color:#ead9b9;padding:11px 16px;font:11px Cinzel;letter-spacing:.1em;text-transform:uppercase;cursor:pointer}button:hover:not(:disabled){background:linear-gradient(#704b2e,#402718)}button:disabled{opacity:.28;cursor:default}
+#status{min-width:135px;text-align:center;font:italic 13px 'IM Fell English';color:#c2b293}.hint{position:absolute;bottom:80px;left:0;right:0;text-align:center;color:#aa9677;font:italic 13px 'IM Fell English';z-index:10}.frame{position:absolute;inset:13px;pointer-events:none;border:1px solid #b99a6844;z-index:20}
+@media(max-width:700px){.book{width:42vw;height:min(56vh,490px);min-width:245px;min-height:340px}.book.open{transform:translateX(50%) scale(.8)}.leaf,.turn-face{padding:23px 17px}.testpage{font-size:13px}.controls{bottom:14px;gap:5px;padding:8px}button{padding:10px 9px;font-size:9px}#status{min-width:82px;font-size:12px}.hint{bottom:72px}}
+@media(max-width:440px){.book.open{transform:translateX(50%) scale(.62)}}
+</style></head><body>
+<header><div class="kicker">ANNO DOMINI MCD</div><h1>VOJTIECH HAVEL</h1><div class="subtitle">Księga z roku pańskiego 1400</div></header><div class="frame"></div>
+<div class="stage"><div class="book" id="book"><div class="pageblock"></div>
+<div class="spread">
+<section class="leaf left" id="leftPage"><div class="testpage"><h2 class="page-title">Na początek kroniki</h2><span class="illuminated">I</span>n nomine Domini. Ta księga została przygotowana, aby zachować pamięć o czynach, ziemiach i ludziach, których imiona winny przetrwać próbę czasu. Jej karty czekają na zapisanie dziejów Vojtiecha Havela.</div><div class="page-number">— 1 —</div></section>
+<section class="leaf right" id="rightPage"><div class="testpage"><h2 class="page-title">Herb rodu</h2><img class="herald-page" src="crest.svg" alt="Herb Vojtiecha Havela"></div><div class="page-number">— 2 —</div></section><div class="spine-shadow"></div></div>
+<div class="turning" id="turning"><div class="turn-face front" id="turnFront"></div><div class="turn-face back" id="turnBack"></div></div>
+<div class="cover" id="cover"><div class="cover-front"><i class="corner c1"></i><i class="corner c2"></i><i class="corner c3"></i><i class="corner c4"></i><div class="cover-art"><img src="crest.svg" alt="Herb Havela"><div class="cover-name">VOJTIECH HAVEL</div><div class="cover-date">1400 rok pański</div></div></div><div class="cover-inside"></div></div>
+</div></div>
+<div class="hint" id="hint">Kliknij okładkę lub przycisk, aby otworzyć księgę</div>
+<div class="controls"><button id="prev" disabled>Poprzednia</button><div id="status">Zamknięta księga</div><button id="next">Otwórz księgę</button></div>
+<script>
+const book=document.getElementById('book'),cover=document.getElementById('cover'),left=document.getElementById('leftPage'),right=document.getElementById('rightPage'),turning=document.getElementById('turning'),front=document.getElementById('turnFront'),back=document.getElementById('turnBack');
+const pages=[
+'<div class="testpage"><h2 class="page-title">Początki rodu</h2><span class="illuminated">V</span>ojtiech Havel, którego imię zapisane zostanie na kartach tej księgi, niechaj będzie pamiętany przez potomnych. Tu znajdzie się opowieść o jego pochodzeniu, rodzinie i pierwszych latach życia.</div><div class="page-number">— 3 —</div>',
+'<div class="testpage"><h2 class="page-title">Ziemie i powinności</h2>Na tych kartach opisane zostaną ziemie, zamki, wsie i powinności, które powierzono pod jego pieczę. Niechaj każda granica i każda osada znajdzie tu swoje miejsce.</div><div class="page-number">— 4 —</div>',
+'<div class="testpage"><h2 class="page-title">Mapa włości</h2><svg class="map-svg" viewBox="0 0 300 360" xmlns="http://www.w3.org/2000/svg"><rect width="300" height="360" fill="#d7c59e"/><path d="M0 65 Q65 25 118 65 T300 42 M0 260 Q90 225 160 270 T300 245" fill="none" stroke="#78918a" stroke-width="9"/><path d="M32 0L62 360M220 0L192 360M0 160L300 175" stroke="#9a8056" stroke-width="2" stroke-dasharray="5 6"/><path d="M90 95L180 90 212 150 175 220 85 205 55 145Z" fill="#b2a079" stroke="#67563b" stroke-width="3"/><path d="M126 117l22-17 22 17v26h-44z" fill="#6d3925" stroke="#4d2c1d" stroke-width="3"/><text x="150" y="285" text-anchor="middle" font-family="serif" font-size="15" fill="#4a3825">MAPA WŁOŚCI</text><text x="150" y="307" text-anchor="middle" font-family="serif" font-size="10" fill="#4a3825">miejsce na właściwą mapę</text></svg></div><div class="page-number">— 5 —</div>',
+'<div class="testpage"><h2 class="page-title">Czyny i zasługi</h2><span class="illuminated">H</span>istorie bitew, przysiąg, sojuszy i ważnych wydarzeń zostaną spisane w tym miejscu. Każdy rozdział będzie można uzupełnić tekstem, ryciną lub dokumentem.</div><div class="page-number">— 6 —</div>',
+'<div class="testpage"><h2 class="page-title">Pamięć potomnych</h2>Niechaj ta księga pozostanie świadectwem minionych dni. Puste karty nie oznaczają końca opowieści, lecz miejsce na kolejne rozdziały kroniki.</div><div class="page-number">— 7 —</div>',
+'<div class="testpage"><h2 class="page-title">Zapiski</h2>Ostatnie karty pozostawiono wolne na dopiski, pieczęcie, ilustracje, rodowody i inne świadectwa historii.</div><div class="page-number">— 8 —</div>'
+];
+let opened=false,spread=0,busy=false;
+function updateUI(){document.getElementById('status').textContent=opened?'Strony '+(spread*2+1)+'–'+(spread*2+2):'Zamknięta księga';document.getElementById('prev').disabled=!opened||spread===0||busy;document.getElementById('next').disabled=busy||(opened&&spread>=3);document.getElementById('next').textContent=opened?'Następne strony':'Otwórz księgę';document.getElementById('hint').textContent=opened?'Przewracaj strony przyciskami lub strzałkami na klawiaturze':'Kliknij okładkę lub przycisk, aby otworzyć księgę'}
+function openBook(){if(opened||busy)return;opened=true;book.classList.add('open');updateUI()}
+function renderSpread(){left.innerHTML=pages[spread*2]||pages[0];right.innerHTML=pages[spread*2+1]||pages[1]}
+function flip(dir){if(!opened||busy)return;const next=spread+dir;if(next<0||next>2)return;busy=true;front.innerHTML=dir>0?right.innerHTML:left.innerHTML;back.innerHTML=dir>0?pages[next*2]:pages[next*2+1];turning.classList.add('active');document.getElementById('prev').disabled=true;document.getElementById('next').disabled=true;setTimeout(()=>{spread=next;renderSpread();turning.classList.remove('active');busy=false;updateUI()},920)}
+document.getElementById('next').addEventListener('click',()=>opened?flip(1):openBook());document.getElementById('prev').addEventListener('click',()=>flip(-1));cover.addEventListener('click',openBook);
+window.addEventListener('keydown',e=>{if(e.key==='ArrowRight'){opened?flip(1):openBook()}if(e.key==='ArrowLeft')flip(-1)});
+renderSpread();updateUI();
 </script></body></html>
